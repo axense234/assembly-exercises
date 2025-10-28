@@ -1,0 +1,49 @@
+     1                                  bits 32 ; assembling for the 32 bits architecture
+     2                                  
+     3                                  ; declare the EntryPoint (a label defining the very first instruction of the program)
+     4                                  global start        
+     5                                  
+     6                                  ; declare external functions needed by our program
+     7                                  extern exit               ; tell nasm that exit exists even if we won't be defining it
+     8                                  import exit msvcrt.dll    ; exit is a function that ends the calling process. It is defined in msvcrt.dll
+     9                                                            ; msvcrt.dll contains exit, printf and all the other important C-runtime specific functions
+    10                                  
+    11                                  ; our data is declared here (the variables needed by our program)
+    12                                  segment data use32 class=data
+    13                                      ; ...
+    14 00000000 0A                          a db 10
+    15 00000001 0C                          b db 12
+    16 00000002 02                          c db 2
+    17 00000003 08                          d db 8
+    18                                  
+    19                                  ; our code starts here
+    20                                  segment code use32 class=code
+    21                                      start:
+    22                                          ; a + b -> al
+    23 00000000 A0[00000000]                    mov al, [a] ; al = a
+    24 00000005 0205[01000000]                  add al, [b] ; al = a + b
+    25                                      
+    26                                          ; (a + b) - c -> ah
+    27 0000000B 88C4                            mov ah, al ; ah = al
+    28 0000000D 2A25[02000000]                  sub ah, [c] ; ah = al - c = (a + b) - c
+    29                                          
+    30                                          ; ((a + b) - c) * d -> ax (set location)
+    31 00000013 88E7                            mov bh, ah ; bh = ah = (a + b) - c
+    32 00000015 88F8                            mov al, bh ; al = bh = (a + b) - c
+    33 00000017 F625[03000000]                  mul byte [d] ; ax = al * d = ((a + b) - c) * d
+    34 0000001D 6689C1                          mov cx, ax ; cx = ax = ((a + b) - c) * d
+    35                                          
+    36                                          ; ((a + b) - c) * d)(160) - (c * d + b) / a (28 / 10 = 2, 8) -> bx (158)
+    37 00000020 A0[02000000]                    mov al, [c] ; al = c
+    38 00000025 F625[03000000]                  mul byte [d] ; ax = al * d = c * d
+    39 0000002B 660305[01000000]                add ax, [b] ; ax = ax + b = c * d + b
+    40 00000032 B400                            mov ah, 0 ; ah = 0000 (i think if i don't do this it will make my cbw conversion wierd)
+    41 00000034 F635[00000000]                  div byte [a] ; al = ax / a = (c * d + b) / a
+    42                                          ; i want al to convert to ax in order to do the final subtraction
+    43 0000003A 6698                            cbw ; ax = al (sign extended)
+    44 0000003C 6629C1                          sub cx, ax; cx = cx - ax(al) = ((a + b) - c) * d) - (c * d + b) / a
+    45                                          
+    46                                      
+    47                                          ; exit(0)
+    48 0000003F 6A00                            push    dword 0      ; push the parameter for exit onto the stack
+    49 00000041 FF15[00000000]                  call    [exit]       ; call exit to terminate the program
