@@ -1,0 +1,74 @@
+     1                                  bits 32 ; assembling for the 32 bits architecture
+     2                                  
+     3                                  ; declare the EntryPoint (a label defining the very first instruction of the program)
+     4                                  global start        
+     5                                  
+     6                                  ; declare external functions needed by our program
+     7                                  extern exit               ; tell nasm that exit exists even if we won't be defining it
+     8                                  import exit msvcrt.dll    ; exit is a function that ends the calling process. It is defined in msvcrt.dll
+     9                                                            ; msvcrt.dll contains exit, printf and all the other important C-runtime specific functions
+    10                                  
+    11                                  ; our data is declared here (the variables needed by our program)
+    12                                  
+    13                                  ; Two byte strings S1 and S2 are given. Obtain the string D by concatenating the elements of S1 from the left hand side to the right hand side and the elements of S2 from the right hand side to the left hand side.
+    14                                  
+    15                                  ; for int i = 0, i < len_s2 + len_s1, ++i
+    16                                  ;    if c > 0:
+    17                                  ;       d += s1[i]
+    18                                  ;       c--;
+    19                                  ;    else:
+    20                                  ;       d += s2[len_s2 - i]
+    21                                  
+    22                                  segment data use32 class=data
+    23                                      ; ...
+    24                                      LEN_S1 equ 4
+    25                                      LEN_S2 equ 3
+    26 00000000 01020304                    S1 db 1, 2, 3, 4
+    27 00000004 050607                      S2 db 5, 6, 7
+    28 00000007 00000000000000              D db 0, 0, 0, 0, 0, 0, 0
+    29 0000000E 04                          c db LEN_S1
+    30                                      
+    31                                  
+    32                                  ; our code starts here
+    33                                  segment code use32 class=code
+    34                                      ; i = eax
+    35                                      
+    36                                      start:
+    37                                          ;...
+    38                                          for_init:
+    39 00000000 B800000000                          mov eax, 0
+    40                                          for_cond:
+    41 00000005 83F807                              cmp eax, LEN_S2 + LEN_S1
+    42 00000008 7D2A                                jge for_end
+    43                                          for_body:
+    44                                          
+    45                                              if_cond:
+    46                                                  ; c > 0
+    47 0000000A 803D[0E000000]00                        cmp byte [c], 0
+    48 00000011 7E12                                    jle if_cond_false
+    49                                            
+    50                                              ; d = 1, 2, 3, 4
+    51                                              if_cond_true:
+    52                                                  ; ebx = s1[i]
+    53 00000013 8B98[00000000]                          mov ebx, [S1 + eax]
+    54                                                  ; d += s1[i]
+    55 00000019 8998[07000000]                          mov [D + eax], ebx;
+    56 0000001F FE0D[0E000000]                          dec byte [c]
+    57                                              
+    58                                              ; d = 1, 2, 3, 4, 7, 6, 5
+    59                                              if_cond_false:
+    60                                                  ; ebx = s2[len_s2 - i]
+    61 00000025 8B98[01000000]                          mov ebx, [S2 - (LEN_S2 - eax)]
+    62                                              
+    63                                                  ; s1 at the next pos starting from it's end
+    64 0000002B 8998[0B000000]                          mov [D + (eax + LEN_S1)], ebx
+    65                                              
+    66                                          for_post:
+    67 00000031 40                                  inc eax
+    68 00000032 EBD1                                jmp for_cond
+    69                                          for_end:
+    70                                          
+    71                                      
+    72                                          ; exit(0)
+    73 00000034 6A00                            push    dword 0      ; push the parameter for exit onto the stack
+    74 00000036 FF15[00000000]                  call    [exit]       ; call exit to terminate the program
