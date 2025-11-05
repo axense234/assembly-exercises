@@ -1,0 +1,59 @@
+     1                                  bits 32 ; assembling for the 32 bits architecture
+     2                                  
+     3                                  ; declare the EntryPoint (a label defining the very first instruction of the program)
+     4                                  global start        
+     5                                  
+     6                                  ; declare external functions needed by our program
+     7                                  extern exit               ; tell nasm that exit exists even if we won't be defining it
+     8                                  import exit msvcrt.dll    ; exit is a function that ends the calling process. It is defined in msvcrt.dll
+     9                                                            ; msvcrt.dll contains exit, printf and all the other important C-runtime specific functions
+    10                                  
+    11                                  ; our data is declared here (the variables needed by our program)
+    12                                  
+    13                                  ; 1. Given the words A and B, compute the doubleword C as follows:
+    14                                  ; the bits 0-4 of C are the same as the bits 11-15 of A
+    15                                  ; the bits 5-11 of C have the value 1
+    16                                  ; the bits 12-15 of C are the same as the bits 8-11 of B
+    17                                  ; the bits 16-31 of C are the same as the bits of A
+    18                                  
+    19                                  
+    20                                  segment data use32 class=data
+    21                                      ; ...
+    22 00000000 695C                        a dw 0101110001101001b ; 0x5C69
+    23 00000002 38B5                        b dw 1011010100111000b ; 0xB538
+    24 00000004 00000000                    c dd 0
+    25                                  
+    26                                  ; our code starts here
+    27                                  segment code use32 class=code
+    28                                      start:
+    29                                          ; ...
+    30 00000000 B900000000                      mov ecx, 0; ecx = 0*32 = il store the computation here
+    31                                          
+    32                                          ; the bits 0-4 of C are the same as the bits 11-15 of A
+    33 00000005 66A1[00000000]                  mov ax, [a] ; ax = a = 01011 10001101001b = 0x5C69
+    34 0000000B 662500F8                        and ax, 1111100000000000b ; ax = 0x5800
+    35 0000000F 98                              cwde; ax -> eax = 0x00005800 = 0000 0000 0000 1011
+    36 00000010 C1C80B                          ror eax, 11; eax rotates by 11 positions to the right => eax = 0x0000000B
+    37 00000013 09C1                            or ecx, eax; ecx = 0x0000000B
+    38                                          
+    39                                          ; the bits 5-11 of C have the value 1
+    40 00000015 81C9E00F0000                    or ecx, 0x00000FE0; ecx = 0x00000FEB
+    41                                          
+    42                                          ; the bits 12-15 of C are the same as the bits 8-11 of B
+    43 0000001B B800000000                      mov eax, 0 ; eax = 0
+    44 00000020 66A1[02000000]                  mov ax, [b] ; ax = 0xB538
+    45 00000026 6625000F                        and ax, 0x0F00 ; ax = 0x0500
+    46 0000002A 98                              cwde; ax -> eax = 0x00000500
+    47 0000002B C1C004                          rol eax, 4 ; eax rotates by 4 positions to the left => eax = 0x00005000
+    48 0000002E 09C1                            or ecx, eax ; ecx = 0x00005FEB
+    49                                          
+    50                                          ; the bits 16-31 of C are the same as the bits of A
+    51 00000030 A1[00000000]                    mov eax, [a] ; eax = 0x????5c69
+    52 00000035 25695C0000                      and eax, 0x00005C69 ; eax = 0x00005C69
+    53 0000003A C1C010                          rol eax, 16 ; eax = 0x5C690000
+    54 0000003D 09C1                            or ecx, eax ; ecx = 0x5C695FEB
+    55                                          
+    56                                      
+    57                                          ; exit(0)
+    58 0000003F 6A00                            push    dword 0      ; push the parameter for exit onto the stack
+    59 00000041 FF15[00000000]                  call    [exit]       ; call exit to terminate the program
