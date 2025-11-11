@@ -36,8 +36,8 @@ segment code use32 class=code
 	    adc edx, ecx ; edx = edx + ecx + CF 
         
         ; edx:eax -> r
-        mov [r + 0], eax
-        mov [r + 4], edx
+        mov dword [r + 0], eax
+        mov dword [r + 4], edx
     
         ; exit(0)
         push    dword 0      ; push the parameter for exit onto the stack
