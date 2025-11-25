@@ -24,7 +24,7 @@ start:
     ; file = fopen(file_name, file_mode)
     push file_mode
     push file_name
-    call [fopen]
+    call [fopen] ; eax = file
     add esp, 2 * 4
     mov [file], eax
 
