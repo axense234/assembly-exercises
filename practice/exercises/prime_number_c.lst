@@ -1,0 +1,132 @@
+     1                                  bits 32 ; assembling for the 32 bits architecture
+     2                                  
+     3                                  ; declare the EntryPoint (a label defining the very first instruction of the program)
+     4                                  global start        
+     5                                  
+     6                                  ; declare external functions needed by our program
+     7                                  extern exit, scanf, printf 
+     8                                  import exit msvcrt.dll
+     9                                  import scanf msvcrt.dll
+    10                                  import printf msvcrt.dll
+    11                                  
+    12                                  ; Problem Statement: Check if a given number from the console is a prime number in assembly
+    13                                  
+    14                                  ; int d
+    15                                  ; int n
+    16                                  
+    17                                  ; printf("%s", "Enter a number: ")
+    18                                  ; scanf("%d", &n);
+    19                                  ; for (d = 2, d <= n / 2, ++d):
+    20                                      ; if n % d == 0:
+    21                                          ; printf("%s", n + " " + "is not a prime number.")
+    22                                          ; exit(1)
+    23                                  ; printf("%s", n + " " + "is prime number.")
+    24                                  ; exit(1)
+    25                                      
+    26                                  
+    27                                  
+    28                                  ; our data is declared here (the variables needed by our program)
+    29                                  segment data use32 class=data
+    30 00000000 256400                      scanf_format db "%d", 0
+    31                                      
+    32 00000003 456E7465722061206E-         printf_input_format db "Enter a number: ", 10, 0
+    32 0000000C 756D6265723A200A00 
+    33 00000015 256420697320612070-         printf_prime_format db "%d is a prime number", 10, 0
+    33 0000001E 72696D65206E756D62-
+    33 00000027 65720A00           
+    34 0000002B 2564206973206E6F74-         printf_not_prime_format db "%d is not a prime number", 10, 0
+    34 00000034 2061207072696D6520-
+    34 0000003D 6E756D6265720A00   
+    35                                      
+    36 00000045 25640A00                    testing db "%d", 10, 0
+    37                                      
+    38 00000049 <res 00000002>              n resw 1
+    39 0000004B 0000                        d dw 0
+    40                                  
+    41                                  ; our code starts here
+    42                                  segment code use32 class=code
+    43                                      start:
+    44                                          ; printf("%s", "Enter a number: ")
+    45 00000000 68[03000000]                    push printf_input_format
+    46 00000005 FF15[00000000]                  call [printf]
+    47 0000000B 83C404                          add esp, 1 * 4
+    48                                          
+    49                                          ; scanf("%d", &n);
+    50 0000000E 68[49000000]                    push n
+    51 00000013 68[00000000]                    push scanf_format
+    52 00000018 FF15[00000000]                  call [scanf]
+    53 0000001E 83C408                          add esp, 2 * 4
+    54                                          
+    55                                          for_init:
+    56                                              ; d = 2
+    57 00000021 66C705[4B000000]02-                 mov word [d], 2;
+    57 00000029 00                 
+    58                                           
+    59                                          for_cond:
+    60                                              ; n / 2 = AL
+    61 0000002A 66A1[49000000]                      mov ax, [n]
+    62 00000030 B302                                mov bl, 2
+    63 00000032 F6F3                                div bl
+    64                                              
+    65                                              ; d <= n / 2
+    66 00000034 3805[4B000000]                      cmp [d], al
+    67 0000003A 7F3C                                jg for_end
+    68                                  
+    69                                          for_body:
+    70                                              if_cond:
+    71                                                  ; n % d = AH
+    72 0000003C 66A1[49000000]                          mov ax, [n]
+    73 00000042 8A1D[4B000000]                          mov bl, [d]
+    74 00000048 F6F3                                    div bl
+    75                                                  
+    76                                                  ; AH = 0
+    77 0000004A 80FC00                                  cmp ah, 0
+    78 0000004D 751E                                    jne if_end
+    79                                                  
+    80                                              if_true:
+    81                                                  ; printf(printf_not_prime_format, n)
+    82 0000004F 66A1[49000000]                          mov ax, [n]; ax = n
+    83 00000055 98                                      cwde; ax -> eax
+    84 00000056 50                                      push eax
+    85 00000057 68[2B000000]                            push printf_not_prime_format
+    86 0000005C FF15[00000000]                          call [printf]
+    87 00000062 83C408                                  add esp, 2 * 4
+    88                                                  
+    89                                                  
+    90                                                  ; exit(1)
+    91 00000065 6A01                                    push 1
+    92 00000067 FF15[00000000]                          call [exit]
+    93                                              
+    94                                              if_end:
+    95 0000006D EB00                                    jmp for_post_body
+    96                                          
+    97                                          for_post_body:
+    98                                              ; ++d
+    99 0000006F 66FF05[4B000000]                    inc word [d]
+   100 00000076 EBB2                                jmp for_cond
+   101                                          
+   102                                          for_end:
+   103                                          
+   104                                          ; printf(printf_prime_format, n)
+   105 00000078 66A1[49000000]                  mov ax, [n]; ax = n        
+   106 0000007E 98                              cwde ; ax -> eax
+   107 0000007F 50                              push eax       
+   108 00000080 68[15000000]                    push printf_prime_format
+   109 00000085 FF15[00000000]                  call [printf]
+   110 0000008B 83C408                          add esp, 2 * 4
+   111                                          
+   112                                          ; exit(1)
+   113 0000008E 6A01                            push 1
+   114 00000090 FF15[00000000]                  call [exit]
+   115                                          
+   116                                          
+   117                                          
+   118                                          
+   119                                          
+   120                                          
+   121                                          
+   122                                          
+   123                                          
+   124                                          
+   125                                          
+   126                                          

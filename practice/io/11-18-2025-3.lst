@@ -1,0 +1,90 @@
+     1                                  bits 32 ; assembling for the 32 bits architecture
+     2                                  
+     3                                  ; declare the EntryPoint (a label defining the very first instruction of the program)
+     4                                  global start        
+     5                                  
+     6                                  ; declare external functions needed by our program
+     7                                  extern exit, printf, scanf
+     8                                  import exit msvcrt.dll
+     9                                  import printf msvcrt.dll
+    10                                  import scanf msvcrt.dll
+    11                                  
+    12                                  ; Read an unspecified amount of numbers from the keyboard, then display them in reverse order.
+    13                                  
+    14                                  ; our data is declared here (the variables needed by our program)
+    15                                  segment data use32 class=data
+    16 00000000 256400                      scanf_format db "%d", 0
+    17 00000003 53756D206973202564-         printf_format db "Sum is %d", 10, 0
+    17 0000000C 0A00               
+    18 0000000E <res 0000000A>              numbers resb 10
+    19 00000018 00000000                    n dd 0
+    20                                  
+    21                                  ; our code starts here
+    22                                  segment code use32 class=code
+    23                                      start:
+    24                                          ; read an unspecified amount of numbers from the keyboard
+    25                                          ; run ctrl+z + enter to stop
+    26                                          
+    27                                          ; while True: scanf(scanf_format, &numbers[n]), ++n
+    28                                          while_start:
+    29                                              ; eax = &numbers[n]
+    30 00000000 8B1D[18000000]                      mov ebx, [n]
+    31 00000006 8D049D[0E000000]                    lea eax, [numbers + ebx * 4]
+    32                                              
+    33                                              ; scanf(scanf_format, &numbers[n])
+    34 0000000D 50                                  push eax
+    35 0000000E 68[00000000]                        push scanf_format
+    36 00000013 FF15[00000000]                      call [scanf]
+    37 00000019 83C408                              add esp, 2 * 4
+    38                                              
+    39                                              ; if eax > 0
+    40 0000001C 83F800                              cmp eax, 0
+    41 0000001F 7E08                                jle while_end
+    42                                              
+    43                                              
+    44 00000021 FF05[18000000]                      inc dword [n]
+    45                                              
+    46 00000027 EBD7                                jmp while_start
+    47                                             
+    48                                          while_end:
+    49                                          
+    50                                          ; display inputted numbers in reverse order
+    51                                          ; for i = n - 1, i >= 0, --i: printf(printf_format, &numbers[i])
+    52                                          ; i = n - 1
+    53                                          for_init:
+    54 00000029 8B0D[18000000]                      mov ecx, [n]
+    55 0000002F 49                                  dec ecx
+    56                                          
+    57                                          ; i >= 0,  i = ecx
+    58                                          for_cond:
+    59 00000030 83F900                              cmp ecx, 0
+    60 00000033 7C1B                                jl for_end
+    61                                          
+    62                                          ; printf(printf_format, &numbers[i])
+    63                                          ; eax = &numbers[i]
+    64                                          for_body:
+    65 00000035 51                                  push ecx
+    66 00000036 8B048D[0E000000]                    mov eax, [numbers + ecx * 4]
+    67                                          
+    68 0000003D 50                                  push eax
+    69 0000003E 68[03000000]                        push printf_format
+    70 00000043 FF15[00000000]                      call [printf]
+    71 00000049 83C408                              add esp, 2 * 4
+    72                                              
+    73 0000004C 59                                  pop ecx
+    74                                          
+    75                                          ; --i
+    76                                          for_post_body:
+    77 0000004D 49                                  dec ecx
+    78 0000004E EBE0                                jmp for_cond
+    79                                              
+    80                                          for_end:
+    81                                          
+    82                                          ; exit(0)
+    83 00000050 6A00                            push    dword 0      ; push the parameter for exit onto the stack
+    84 00000052 FF15[00000000]                  call    [exit]       ; call exit to terminate the program
+    85                                  
+    86                                          
+    87                                          
+    88                                          
+    89                                          

@@ -1,0 +1,58 @@
+     1                                  bits 32 ; assembling for the 32 bits architecture
+     2                                  
+     3                                  ; declare the EntryPoint (a label defining the very first instruction of the program)
+     4                                  global start        
+     5                                  
+     6                                  ; declare external functions needed by our program
+     7                                  extern exit, scanf, printf
+     8                                  import exit msvcrt.dll
+     9                                  import scanf msvcrt.dll
+    10                                  import printf msvcrt.dll
+    11                                  
+    12                                  ; our data is declared here (the variables needed by our program)
+    13                                  segment data use32 class=data
+    14 00000000 25643A2000                  scanf_format db "%d: ", 0
+    15 00000005 2564202A202564203D-         printf_format db "%d * %d = %lld", 10, 0
+    15 0000000E 20256C6C640A00     
+    16                                      
+    17 00000015 00000000                    a dd 0
+    18 00000019 00000000                    b dd 0
+    19                                      
+    20 0000001D 0000000000000000            res dq 0
+    21                                  
+    22                                  ; our code starts here
+    23                                  segment code use32 class=code
+    24                                      start:
+    25                                          ; get a from console
+    26 00000000 68[15000000]                    push dword a
+    27 00000005 68[00000000]                    push scanf_format
+    28 0000000A FF15[00000000]                  call [scanf]
+    29 00000010 83C408                          add esp, 2 * 4
+    30                                          
+    31                                          ; get b from console
+    32 00000013 68[19000000]                    push dword b
+    33 00000018 68[00000000]                    push scanf_format
+    34 0000001D FF15[00000000]                  call [scanf]
+    35 00000023 83C408                          add esp, 2 * 4
+    36                                          
+    37                                          ; edx:eax = a * b
+    38 00000026 A1[15000000]                    mov eax, [a]
+    39 0000002B 8B1D[19000000]                  mov ebx, [b]
+    40 00000031 F7E3                            mul ebx
+    41                                          
+    42                                          ; res = edx:eax
+    43 00000033 A3[1D000000]                    mov [res], eax
+    44 00000038 8915[21000000]                  mov [res + 4], edx
+    45                                          
+    46                                          ; print a * b = edx:eax
+    47 0000003E FF35[21000000]                  push dword [res + 4]
+    48 00000044 FF35[1D000000]                  push dword [res]
+    49 0000004A FF35[19000000]                  push dword [b]
+    50 00000050 FF35[15000000]                  push dword [a]
+    51 00000056 68[05000000]                    push printf_format
+    52 0000005B FF15[00000000]                  call [printf]
+    53 00000061 83C414                          add esp, 5 * 4
+    54                                      
+    55                                          ; exit(0)
+    56 00000064 6A00                            push    dword 0      ; push the parameter for exit onto the stack
+    57 00000066 FF15[00000000]                  call    [exit]       ; call exit to terminate the program

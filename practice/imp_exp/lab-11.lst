@@ -1,0 +1,150 @@
+     1                                  bits 32 ; assembling for the 32 bits architecture
+     2                                  
+     3                                  ; declare the EntryPoint (a label defining the very first instruction of the program)
+     4                                  global start        
+     5                                  
+     6                                  ; declare external functions needed by our program
+     7                                  extern exit, printf           ; tell nasm that exit exists even if we won't be defining it
+     8                                  import exit msvcrt.dll    ; exit is a function that ends the calling process. It is defined in msvcrt.dll
+     9                                                            ; msvcrt.dll contains exit, printf and all the other important C-runtime specific functions
+    10                                  import printf msvcrt.dll
+    11                                                            
+    12                                  ; our data is declared here (the variables needed by our program)
+    13                                  segment data use32 class=data
+    14 00000000 010000000200000003-         numbers dd 1, 2, 3, 4, 5
+    14 00000009 000000040000000500-
+    14 00000012 0000               
+    15                                      LEN equ ($ - numbers) / 4 ; $ = current offset
+    16 00000014 25642000                    printf_format db "%d ", 0
+    17                                  
+    18                                  ; our code starts here
+    19                                  segment code use32 class=code
+    20                                      start:
+    21                                          ; display(numbers, LEN)
+    22                                          ; sequeling convention:
+    23                                          ; - arguments get passed on the stack from right to left
+    24                                          ; - the return value is stored in eax (edx)
+    25                                          ; - all registers are preserved except eax, ecx, edx
+    26 00000000 6A05                            push LEN
+    27 00000002 68[00000000]                    push numbers
+    28 00000007 E829000000                      call display ; eax -> nothing
+    29 0000000C 83C408                          add esp, 2 * 4
+    30                                          
+    31                                          ; sum(len, numbers)
+    32 0000000F 68[00000000]                    push numbers
+    33 00000014 6A05                            push LEN
+    34 00000016 E84D000000                      call sum
+    35 0000001B 83C408                          add esp, 2 * 4
+    36                                          
+    37                                          ; printf(printf_format, sum)
+    38 0000001E 50                              push eax
+    39 0000001F 68[14000000]                    push printf_format
+    40 00000024 FF15[00000000]                  call [printf]
+    41 0000002A 83C408                          add esp, 2 * 4
+    42                                      
+    43                                          ; exit(0)
+    44 0000002D 6A00                            push    dword 0      ; push the parameter for exit onto the stack
+    45 0000002F FF15[00000000]                  call    [exit]       ; call exit to terminate the program
+    46                                  
+    47                                          
+    48                                  ; void display(int * numbers, int n) { ... }
+    49                                  display:
+    50                                      ; ---------[ret_a][numbers][n]
+    51                                      ;           ^->esp
+    52                                      ; [esp] -> ret_a
+    53                                      ; [esp + x * 4] -> parameters from left to right
+    54                                      
+    55 00000035 55                          push ebp
+    56 00000036 89E5                        mov ebp, esp ; bookmark for vars
+    57                                      
+    58                                      ; reserve space for local variable
+    59                                      ; [esp] - i
+    60                                      
+    61 00000038 83EC04                      sub esp, 1 * 4
+    62                                      
+    63                                      ; [ebp] - ret add
+    64                                      ; [ebp + x * 4] -> parameters from left to right
+    65                                      
+    66                                      ; [ebp - 4] -> i local var
+    67                                      
+    68                                  
+    69                                      ; for (int i = 0; i < n; ++i) {..}
+    70                                      for_init:
+    71                                          ; xor ecx, ecx ; clear ecx
+    72 0000003B C745FC00000000                  mov dword [ebp - 4], 0
+    73                                      for_cond:
+    74 00000042 8B4DFC                          mov ecx, [ebp - 4] ; ecx = i
+    75 00000045 3B4D0C                          cmp ecx, [ebp + 12] ; [ebp + 12] = n,
+    76 00000048 7D1A                            jge for_end
+    77                                      for_body:
+    78                                          ; printf(printf_format, numbers[i]]
+    79                                          ; eax -> numbers[i]
+    80 0000004A 8B4508                          mov eax, [ebp + 8]
+    81 0000004D 8B0488                          mov eax, [eax + ecx * 4]
+    82                                          
+    83 00000050 50                              push eax
+    84 00000051 68[14000000]                    push printf_format
+    85 00000056 FF15[00000000]                  call [printf]
+    86 0000005C 83C408                          add esp, 2 * 4
+    87                                          
+    88                                  
+    89                                          
+    90                                      for_post_body:
+    91 0000005F FF45FC                          inc dword [ebp - 4] ; ++i
+    92 00000062 EBDE                            jmp for_cond
+    93                                      for_end:
+    94                                      
+    95 00000064 89EC                        mov esp, ebp
+    96 00000066 5D                          pop ebp
+    97                                      
+    98 00000067 C3                          ret
+    99                                  
+   100                                  ; int sum(int n, int * numbers) { ... }
+   101                                  sum:
+   102                                  
+   103 00000068 55                          push ebp
+   104 00000069 89E5                        mov ebp, esp ; bookmark for vars
+   105 0000006B 83EC08                      sub esp, 2 * 4
+   106                                      
+   107                                      ; [ebp - 4] -> i
+   108                                      ; [ebp - 8] -> sum
+   109                                      
+   110                                      ; for (int i = 0; i < n; ++i) {..}
+   111                                      for_init_2:
+   112                                          ; xor ecx, ecx ; clear ecx
+   113 0000006E C745FC00000000                  mov dword [ebp - 4], 0
+   114 00000075 C745F800000000                  mov dword [ebp - 8], 0
+   115                                      for_cond_2:
+   116 0000007C 8B4DFC                          mov ecx, [ebp - 4] ; ecx = i
+   117 0000007F 3B4D08                          cmp ecx, [ebp + 8] ; [ebp + 8] = n,
+   118 00000082 7D0E                            jge for_end_2
+   119                                      for_body_2:
+   120 00000084 8B450C                          mov eax, [ebp + 12]
+   121 00000087 8B0488                          mov eax, [eax + ecx * 4]
+   122                                          
+   123 0000008A 0145F8                          add [ebp - 8], eax
+   124                                          
+   125                                      for_post_body_2:
+   126 0000008D FF45FC                          inc dword [ebp - 4] ; ++i
+   127 00000090 EBEA                            jmp for_cond_2
+   128                                      for_end_2:
+   129                                      
+   130 00000092 89EC                        mov esp, ebp
+   131                                      
+   132 00000094 31C0                        xor eax, eax
+   133 00000096 8B45F8                      mov eax, [ebp - 8]
+   134                                      
+   135 00000099 5D                          pop ebp
+   136                                      
+   137 0000009A C3                          ret
+   138                                      
+   139                                      
+   140                                  
+   141                                      
+   142                                      
+   143                                      
+   144                                      
+   145                                      
+   146                                  
+   147                                  
+   148                                      
