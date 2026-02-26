@@ -4,6 +4,8 @@
         <Filter name="" />
         <Filter name="" />
         <Filter name="" />
+        <Filter name="" />
+        <Find name="exit" />
         <Find name="template" />
         <Find name="ebx" />
         <Find name="eax" />
@@ -11,6 +13,7 @@
         <Replace name="    " />
     </FindHistory>
     <History nbMaxFile="10" inSubMenu="no" customLength="-1">
+<<<<<<< HEAD
         <File filename="C:\Users\axense\Desktop\Coding\Assembly\assembly\practice\jumps\6_for_break.asm" />
         <File filename="C:\Users\axense\Desktop\Coding\Assembly\assembly\practice\jumps\labels.asm" />
         <File filename="C:\Users\axense\Desktop\Coding\Assembly\assembly\practice\jumps\stack_frame.asm" />
@@ -21,6 +24,18 @@
         <File filename="C:\Users\axense\Desktop\Coding\Assembly\assembly\practice\operations\multiplications-divisions-signed.asm" />
         <File filename="C:\Users\axense\Desktop\Coding\Assembly\assembly\practice\operations\simple-operations.asm" />
         <File filename="C:\Users\axense\Desktop\Coding\Assembly\assembly\practice\retake\build-string.asm" />
+=======
+        <File filename="C:\Users\axense\Desktop\Coding\Assembly\ASM_tools\asm_tools\test_multi\printf_wrapper_func.asm" />
+        <File filename="C:\Users\axense\Desktop\Coding\Assembly\ASM_tools\asm_tools\test_multi\printf_wrapper.asm" />
+        <File filename="C:\Users\andre\OneDrive\Desktop\assembly\practice\imp_exp\lab10.asm" />
+        <File filename="C:\Users\andre\OneDrive\Desktop\assembly\test_link_c\main.c" />
+        <File filename="C:\Users\andre\OneDrive\Desktop\assembly\test_multi\printf_wrapper_func.asm" />
+        <File filename="C:\Users\andre\OneDrive\Desktop\assembly\test_multi\printf_wrapper.asm" />
+        <File filename="C:\Users\andre\OneDrive\Desktop\assembly\practice\io\scanf_array.asm" />
+        <File filename="C:\Users\andre\OneDrive\Desktop\assembly\practice\imp_exp\lab-11.asm" />
+        <File filename="C:\Users\andre\OneDrive\Desktop\assembly\practice\io\file_io.asm" />
+        <File filename="C:\Users\andre\OneDrive\Desktop\assembly\test_link_c\num_product.asm" />
+>>>>>>> fce90f7c69a7f5bc299372dee1898f1c28075a6c
     </History>
     <GUIConfigs>
         <GUIConfig name="ToolBar" visible="yes">standard</GUIConfig>
@@ -29,7 +44,7 @@
         <GUIConfig name="ScintillaViewsSplitter">vertical</GUIConfig>
         <GUIConfig name="UserDefineDlg" position="undocked">hide</GUIConfig>
         <GUIConfig name="TabSetting" replaceBySpace="yes" size="4" />
-        <GUIConfig name="AppPosition" x="-8" y="-8" width="2576" height="1408" isMaximized="yes" />
+        <GUIConfig name="AppPosition" x="-8" y="-8" width="1946" height="1226" isMaximized="yes" />
         <GUIConfig name="noUpdate" intervalDays="15" nextUpdateDate="20080426">no</GUIConfig>
         <GUIConfig name="Auto-detection">yes</GUIConfig>
         <GUIConfig name="CheckHistoryFiles">no</GUIConfig>
@@ -55,7 +70,11 @@
         <GUIConfig name="ScintillaGlobalSettings" enableMultiSelection="no" />
         <GUIConfig name="openSaveDir" value="0" defaultDirPath="" />
         <GUIConfig name="titleBar" short="no" />
+<<<<<<< HEAD
         <GUIConfig name="stylerTheme" path="C:\Users\axense\Desktop\Coding\Assembly\assembly\npp\stylers.xml" />
+=======
+        <GUIConfig name="stylerTheme" path="C:\Users\andre\OneDrive\Desktop\assembly\npp\stylers.xml" />
+>>>>>>> fce90f7c69a7f5bc299372dee1898f1c28075a6c
         <GUIConfig name="wordCharList" useDefault="yes" charsAdded="" />
         <GUIConfig name="delimiterSelection" leftmostDelimiter="40" rightmostDelimiter="41" delimiterSelectionOnEntireDocument="no" />
         <GUIConfig name="multiInst" setting="0" />
@@ -63,7 +82,7 @@
         <GUIConfig name="searchEngine" searchEngineChoice="2" searchEngineCustom="" />
         <GUIConfig name="SmartHighLight" matchCase="no" wholeWordOnly="yes" useFindSettings="no" onAnotherView="no">yes</GUIConfig>
         <GUIConfig name="ScintillaPrimaryView" lineNumberMargin="show" bookMarkMargin="show" indentGuideLine="show" folderMarkStyle="box" lineWrapMethod="aligned" currentLineHilitingShow="show" scrollBeyondLastLine="no" disableAdvancedScrolling="no" wrapSymbolShow="hide" Wrap="no" borderEdge="yes" edge="no" edgeNbColumn="80" zoom="8" zoom2="6" whiteSpaceShow="hide" eolShow="hide" borderWidth="2" smoothFont="no" />
-        <GUIConfig name="DockingManager" leftWidth="200" rightWidth="200" topHeight="200" bottomHeight="200">
+        <GUIConfig name="DockingManager" leftWidth="200" rightWidth="200" topHeight="200" bottomHeight="351">
             <PluginDlg pluginName="AsmPlugin.dll" id="2" curr="3" prev="-1" isVisible="yes" />
             <ActiveTabs cont="0" activeTab="-1" />
             <ActiveTabs cont="1" activeTab="-1" />
