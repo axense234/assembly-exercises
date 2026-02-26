@@ -1,0 +1,38 @@
+REQUIRED FILES:
+ - main.c
+ - module1.asm
+ - module2.asm
+   
+REQUIRED COMMANDS:
+ - nasm module1.asm -fwin32 -g -o module1.obj
+ - nasm module2.asm -fwin32 -g -o module2.obj
+ - cl main.c /link module1.obj module2.obj
+ - main.exe
+
+DOCUMENTATION:
+ - ASM instructions: https://mrlini.github.io/instr/
+ - C functions: https://learn.microsoft.com/en-us/cpp/c-runtime-library/reference/crt-alphabetical-function-reference?view=msvc-170
+
+PROBLEM:
+In main.c, read a number N from the keyboard, followed by an array of N positive numbers. (0 <= N <= 10)
+
+1. In module1.asm, for each number in the array, display whether it is greater that the sum of its predecessors.
+   - The procedure should be named "display".
+   - Display "a > s" if the current number 'a' is greater than the sum of its predecessors 's'.
+   - Display "a <= s" if the current number 'b' is less than or equal to 's'.
+
+2. In module2.asm, implement a procedure that checks whether the array is sorted in ascending order.
+   - The procedure should be named "is_sorted".
+   - The procedure should return 1 if the array is sorted and 0 otherwise.
+   - In main.c display "Array is sorted" or "Array is not sorted" based on the result.
+
+EXAMPLE:
+Input:
+4 1 2 3 8
+
+Output:
+1 > 0
+2 > 1
+3 <= 3
+8 > 6
+Array is sorted

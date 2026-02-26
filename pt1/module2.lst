@@ -1,0 +1,73 @@
+     1                                  bits 32
+     2                                  
+     3                                  global _is_sorted 
+     4                                  
+     5                                  extern exit
+     6                                  import exit msvcrt.dll       
+     7                                  
+     8                                  segment data use32 class=data
+     9                                  
+    10                                  ; int is_sorted(int *numbers, int numbers_len) {...}
+    11                                  ; checks whether the array is sorted in ascending order
+    12                                  ; returns 1 if sorted and 0 otherwise
+    13                                  _is_sorted:
+    14 00000000 53                          push ebx
+    15                                      
+    16 00000001 55                          push ebp
+    17 00000002 89E5                        mov ebp, esp
+    18                                  
+    19                                      ; numbers = [ebp + 8]
+    20                                      ; numbers_len = [ebp + 12]
+    21                                      
+    22                                      ; for(int i = 0; i < numbers_len - 1; ++i){
+    23                                      ;   if (numbers[i] > numbers[i + 1]){
+    24                                      ;       return 0;
+    25                                      ;   }
+    26                                      ; }
+    27                                      ; return 1;
+    28                                     
+    29                                      
+    30                                      .for_init:
+    31 00000004 31C9                            xor ecx, ecx
+    32                                      
+    33                                      .for_cond:
+    34 00000006 83C101                          add dword ecx, 1
+    35 00000009 3B4D0C                          cmp ecx, [ebp + 12]
+    36 0000000C 83E901                          sub dword ecx, 1
+    37 0000000F 7D1D                            jge .for_end
+    38                                      
+    39                                      .for_body:
+    40                                          .if_cond:
+    41 00000011 8B5D08                              mov ebx, [ebp + 8]
+    42 00000014 8B1C8B                              mov ebx, [ebx + ecx * 4]
+    43                                              
+    44 00000017 8B5508                              mov edx, [ebp + 8]
+    45 0000001A 8B548A04                            mov edx, [edx + ecx * 4 + 4]
+    46                                             
+    47 0000001E 39D3                                cmp ebx, edx
+    48 00000020 7F02                                jg .if_not_sorted
+    49                                              
+    50                                          ; continue
+    51 00000022 EB07                            jmp .for_post
+    52                                          
+    53                                          .if_not_sorted:
+    54 00000024 B800000000                          mov eax, 0
+    55 00000029 EB0A                                jmp .clean_up
+    56                                      
+    57                                      .for_post:
+    58 0000002B 41                              inc ecx
+    59 0000002C EBD8                            jmp .for_cond
+    60                                      
+    61                                      .for_end:
+    62 0000002E B801000000                      mov eax, 1
+    63 00000033 EB00                            jmp .clean_up
+    64                                      
+    65                                      .clean_up:
+    66 00000035 5B                              pop ebx
+    67                                          
+    68 00000036 89EC                            mov esp, ebp
+    69 00000038 5D                              pop ebp
+    70 00000039 C3                              ret
+    71                                      
+    72                                      
+    73                                      

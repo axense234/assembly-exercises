@@ -1,6 +1,11 @@
 <NotepadPlus>
     <Session activeView="0">
-        <mainView activeIndex="0" />
+        <mainView activeIndex="2">
+            <File firstVisibleLine="14" xOffset="0" scrollWidth="990" startPos="347" endPos="347" selMode="0" lang="C" encoding="-1" filename="C:\Users\andre\OneDrive\Desktop\assembly\pt1\main.c" backupFilePath="" originalFileLastModifTimestamp="1768320549" mapFirstVisibleDisplayLine="-1" mapFirstVisibleDocLine="-1" mapLastVisibleDocLine="-1" mapNbLine="-1" mapHigherPos="-1" mapWidth="-1" mapHeight="-1" mapKByteInDoc="0" mapWrapIndentMode="-1" mapIsWrap="no" />
+            <File firstVisibleLine="59" xOffset="0" scrollWidth="2156" startPos="1128" endPos="1128" selMode="0" lang="Assembly" encoding="-1" filename="C:\Users\andre\OneDrive\Desktop\assembly\pt1\module1.asm" backupFilePath="" originalFileLastModifTimestamp="1768321696" mapFirstVisibleDisplayLine="-1" mapFirstVisibleDocLine="-1" mapLastVisibleDocLine="-1" mapNbLine="-1" mapHigherPos="-1" mapWidth="-1" mapHeight="-1" mapKByteInDoc="7340078" mapWrapIndentMode="-1" mapIsWrap="no" />
+            <File firstVisibleLine="55" xOffset="0" scrollWidth="1210" startPos="1277" endPos="1277" selMode="0" lang="Assembly" encoding="-1" filename="C:\Users\andre\OneDrive\Desktop\assembly\pt1\module2.asm" backupFilePath="" originalFileLastModifTimestamp="1768321203" mapFirstVisibleDisplayLine="-1" mapFirstVisibleDocLine="-1" mapLastVisibleDocLine="-1" mapNbLine="-1" mapHigherPos="-1" mapWidth="-1" mapHeight="-1" mapKByteInDoc="7340078" mapWrapIndentMode="-1" mapIsWrap="no" />
+            <File firstVisibleLine="21" xOffset="0" scrollWidth="2882" startPos="0" endPos="0" selMode="0" lang="Normal Text" encoding="-1" filename="C:\Users\andre\OneDrive\Desktop\assembly\pt1\practical_test1.txt" backupFilePath="" originalFileLastModifTimestamp="1768317762" mapFirstVisibleDisplayLine="-1" mapFirstVisibleDocLine="-1" mapLastVisibleDocLine="-1" mapNbLine="-1" mapHigherPos="-1" mapWidth="-1" mapHeight="-1" mapKByteInDoc="0" mapWrapIndentMode="-1" mapIsWrap="no" />
+        </mainView>
         <subView activeIndex="0" />
     </Session>
 </NotepadPlus>

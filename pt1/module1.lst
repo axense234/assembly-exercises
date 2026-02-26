@@ -1,0 +1,78 @@
+     1                                  bits 32
+     2                                  
+     3                                  global _display        
+     4                                  
+     5                                  global _printf
+     6                                  
+     7                                  segment data use32 class=data
+     8 00000000 2564203C2025640A00          l_printf_format db "%d < %d", 10, 0
+     9 00000009 2564203E3D2025640A-         ge_printf_format db "%d >= %d", 10, 0
+     9 00000012 00                 
+    10                                  
+    11                                  segment code use32 class=code
+    12                                  ; void display(int *numbers, int numbers_len) {...} -> 
+    13                                  ; -> for each number in the array, display whether it is greater that the sum of its predecessors.
+    14                                  _display:
+    15 00000000 53                          push ebx
+    16                                  
+    17 00000001 55                          push ebp
+    18 00000002 89E5                        mov ebp, esp
+    19                                      
+    20                                      ; local var pred_sum = [ebp - 4]
+    21                                      ; numbers = [ebp + 8]
+    22                                      ; numbers_len = [ebp + 12]
+    23                                      
+    24 00000004 83EC04                      sub esp, 1 * 4
+    25                                      
+    26                                      ; pred_sum = 0
+    27                                      ; for (int i = 0; i < numbers_len; ++i){
+    28                                      ;   if (numbers[i] >= pred_sum){
+    29                                      ;       printf(ge_printf_format, numbers[i], pred_sum);
+    30                                      ;   } else {
+    31                                      ;       printf(l_printf_format, numbers[i], pred_sum);
+    32                                      ;   }
+    33                                      ; }
+    34                                      
+    35 00000007 C745FC00000000              mov dword [ebp - 4], 0
+    36                                      
+    37                                      .for_init:
+    38 0000000E 31C9                            xor ecx, ecx
+    39                                          
+    40                                      .for_cond:
+    41 00000010 3B4D0C                          cmp ecx, [ebp + 12]
+    42 00000013 7D30                            jge .for_end
+    43                                      
+    44                                      .for_body:
+    45                                          .if_cond:
+    46 00000015 8B5D08                              mov ebx, [ebp + 8]
+    47 00000018 8B1C8B                              mov ebx, [ebx + ecx * 4]
+    48 0000001B 3B5DFC                              cmp ebx, [ebp - 4]
+    49 0000001E 7C11                                jl .if_l
+    50                                              
+    51                                          .if_ge:
+    52 00000020 FF75FC                              push dword [ebp - 4]
+    53 00000023 53                                  push ebx
+    54 00000024 68[09000000]                        push ge_printf_format
+    55                                              call _printf
+    55          ******************       error: symbol `_printf' undefined
+    56 00000029 83C40C                              add esp, 3 * 4
+    57                                          
+    58                                          .if_l:
+    59 0000002C FF75FC                              push dword [ebp - 4]
+    60 0000002F 53                                  push ebx
+    61 00000030 68[00000000]                        push l_printf_format
+    62                                              call _printf
+    62          ******************       error: symbol `_printf' undefined
+    63 00000035 83C40C                              add esp, 3 * 4
+    64                                              
+    65                                      
+    66                                      .for_post:
+    67 00000038 41                              inc ecx
+    68 00000039 EBD5                            jmp .for_cond
+    69                                      
+    70                                      .for_end:
+    71 0000003B 5B                              pop ebx
+    72                                          
+    73 0000003C 89EC                            mov esp, ebp
+    74 0000003E 5D                              pop ebp
+    75 0000003F C3                              ret
