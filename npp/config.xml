@@ -11,16 +11,16 @@
         <Replace name="    " />
     </FindHistory>
     <History nbMaxFile="10" inSubMenu="no" customLength="-1">
-        <File filename="C:\Users\axense\Desktop\Coding\Assembly\ASM_tools\asm_tools\npp\plugins\Config\asmPlugin.ini" />
-        <File filename="C:\Users\axense\Desktop\Coding\Assembly\ASM_tools\asm_tools\test_multi\test_multi_1.asm" />
-        <File filename="C:\Users\axense\Desktop\Coding\Assembly\Exercises\exercises\factorial.asm" />
-        <File filename="C:\Users\axense\Desktop\Coding\Assembly\Exercises\exercises\include_directive_1.asm" />
-        <File filename="C:\Users\axense\Desktop\Coding\Assembly\Exercises\imp_exp\lab-11.asm" />
-        <File filename="C:\Users\axense\Desktop\Coding\Assembly\Exercises\operations\complex-operations-2.asm" />
-        <File filename="C:\Users\axense\Desktop\Coding\Assembly\ASM_tools\asm_tools\test_link_c\main.c" />
-        <File filename="C:\Users\axense\Desktop\Coding\Assembly\ASM_tools\asm_tools\test_link_c\num_product.asm" />
-        <File filename="C:\Users\axense\Desktop\Coding\Assembly\ASM_tools\asm_tools\test_multi\printf_wrapper_func.asm" />
-        <File filename="C:\Users\axense\Desktop\Coding\Assembly\ASM_tools\asm_tools\test_multi\printf_wrapper.asm" />
+        <File filename="C:\Users\axense\Desktop\Coding\Assembly\assembly\practice\jumps\6_for_break.asm" />
+        <File filename="C:\Users\axense\Desktop\Coding\Assembly\assembly\practice\jumps\labels.asm" />
+        <File filename="C:\Users\axense\Desktop\Coding\Assembly\assembly\practice\jumps\stack_frame.asm" />
+        <File filename="C:\Users\axense\Desktop\Coding\Assembly\assembly\practice\jumps\test_multiple_args.asm" />
+        <File filename="C:\Users\axense\Desktop\Coding\Assembly\assembly\practice\operations\complex-operations.asm" />
+        <File filename="C:\Users\axense\Desktop\Coding\Assembly\assembly\practice\operations\complex-operations-2.asm" />
+        <File filename="C:\Users\axense\Desktop\Coding\Assembly\assembly\practice\operations\complex-operations-3.asm" />
+        <File filename="C:\Users\axense\Desktop\Coding\Assembly\assembly\practice\operations\multiplications-divisions-signed.asm" />
+        <File filename="C:\Users\axense\Desktop\Coding\Assembly\assembly\practice\operations\simple-operations.asm" />
+        <File filename="C:\Users\axense\Desktop\Coding\Assembly\assembly\practice\retake\build-string.asm" />
     </History>
     <GUIConfigs>
         <GUIConfig name="ToolBar" visible="yes">standard</GUIConfig>
@@ -55,7 +55,7 @@
         <GUIConfig name="ScintillaGlobalSettings" enableMultiSelection="no" />
         <GUIConfig name="openSaveDir" value="0" defaultDirPath="" />
         <GUIConfig name="titleBar" short="no" />
-        <GUIConfig name="stylerTheme" path="C:\Users\axense\Desktop\Coding\Assembly\ASM_tools\asm_tools\npp\stylers.xml" />
+        <GUIConfig name="stylerTheme" path="C:\Users\axense\Desktop\Coding\Assembly\assembly\npp\stylers.xml" />
         <GUIConfig name="wordCharList" useDefault="yes" charsAdded="" />
         <GUIConfig name="delimiterSelection" leftmostDelimiter="40" rightmostDelimiter="41" delimiterSelectionOnEntireDocument="no" />
         <GUIConfig name="multiInst" setting="0" />
@@ -68,7 +68,7 @@
             <ActiveTabs cont="0" activeTab="-1" />
             <ActiveTabs cont="1" activeTab="-1" />
             <ActiveTabs cont="2" activeTab="-1" />
-            <ActiveTabs cont="3" activeTab="0" />
+            <ActiveTabs cont="3" activeTab="-1" />
         </GUIConfig>
     </GUIConfigs>
     <ProjectPanels>

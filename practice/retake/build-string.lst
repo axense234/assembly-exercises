@@ -1,0 +1,109 @@
+     1                                  bits 32
+     2                                  
+     3                                  global start        
+     4                                  
+     5                                  extern exit, printf, scanf
+     6                                  import exit msvcrt.dll
+     7                                  import printf msvcrt.dll
+     8                                  import scanf msvcrt.dll
+     9                                  
+    10                                  ; Problem Statement
+    11                                  ; Given N double word strings from the console, for each one print to the console the original string, a string formed from the high word of the double word string,
+    12                                  ; and a string formed from the low word of the double word string.
+    13                                  ; ex: n = 2
+    14                                  ;     0FF32139h = 0FF3h, 2139h
+    15                                  ;     03FEAD88h = 03FEh, AD88h
+    16                                  
+    17                                  
+    18                                  segment data use32 class=data
+    19 00000000 6E203D2000                  printf_format_n db "n = ", 0
+    20 00000005 256400                      scanf_format_n db "%d", 0
+    21                                      
+    22 00000008 257300                      scanf_format_dword db "%s", 0
+    23                                      
+    24 0000000B 2573203D2025732C20-         printf_format_out db "%s = %s, %s", 10, 0
+    24 00000014 25730A00           
+    25                                      
+    26 00000018 <res 00000004>              n resd 1        
+    27                                      
+    28 0000001C <res 0000000A>              og_string resb 10
+    29 00000026 <res 00000006>              high_string resb 6
+    30 0000002C <res 00000006>              low_string resb 6
+    31                                  
+    32                                  segment code use32 class=code
+    33                                      start:
+    34                                          ; printf(printf_format_n);
+    35 00000000 68[00000000]                    push dword printf_format_n
+    36 00000005 FF15[00000000]                  call [printf]
+    37 0000000B 83C404                          add esp, 1 * 4
+    38                                          
+    39                                          ; scanf(scanf_format_n, &n)
+    40 0000000E 68[18000000]                    push dword n
+    41 00000013 68[05000000]                    push dword scanf_format_n
+    42 00000018 FF15[00000000]                  call [scanf]
+    43 0000001E 83C408                          add esp, 2 * 4
+    44                                          
+    45                                          _for_init:
+    46 00000021 B900000000                          mov ecx, 0
+    47                                             
+    48                                          _for_cond:
+    49 00000026 3B0D[18000000]                      cmp ecx, [n]
+    50 0000002C 7D63                                jge _for_end
+    51                                              
+    52                                          _for_body:
+    53 0000002E 51                                  push ecx
+    54                                          
+    55                                              ; scanf(scanf_format_dword, &og_string);
+    56 0000002F 68[1C000000]                        push dword og_string
+    57 00000034 68[08000000]                        push dword scanf_format_dword
+    58 00000039 FF15[00000000]                      call [scanf]
+    59 0000003F 83C408                              add esp, 2 * 4
+    60                                              
+    61                                              ; high word string
+    62 00000042 BE[1C000000]                        mov esi, og_string
+    63 00000047 BF[26000000]                        mov edi, high_string
+    64 0000004C B904000000                          mov ecx, 4
+    65 00000051 F3A4                                rep movsb
+    66                                              
+    67 00000053 B068                                mov al, 'h'
+    68 00000055 AA                                  stosb
+    69 00000056 B000                                mov al, 0
+    70 00000058 AA                                  stosb
+    71                                              
+    72                                              ; low word string
+    73 00000059 BE[20000000]                        mov esi, og_string + 4
+    74 0000005E BF[2C000000]                        mov edi, low_string
+    75 00000063 B904000000                          mov ecx, 4
+    76 00000068 F3A4                                rep movsb
+    77                                              
+    78 0000006A B068                                mov al, 'h'
+    79 0000006C AA                                  stosb
+    80 0000006D B000                                mov al, 0
+    81 0000006F AA                                  stosb
+    82                                              
+    83                                              ; printf(printf_format_out, og_string, high_string, low_string);
+    84 00000070 68[2C000000]                        push dword low_string
+    85 00000075 68[26000000]                        push dword high_string
+    86 0000007A 68[1C000000]                        push dword og_string
+    87 0000007F 68[0B000000]                        push dword printf_format_out
+    88 00000084 FF15[00000000]                      call [printf]
+    89 0000008A 83C410                              add esp, 4 * 4
+    90                                              
+    91 0000008D 59                                  pop ecx
+    92                                              
+    93                                          _for_next:
+    94 0000008E 41                                  inc ecx
+    95 0000008F EB95                                jmp _for_cond
+    96                                              
+    97                                          _for_end:
+    98                                          
+    99                                          ; exit
+   100 00000091 6A00                            push dword 0
+   101 00000093 FF15[00000000]                  call [exit]
+   102                                          
+   103                                          
+   104                                          
+   105                                          
+   106                                          
+   107                                          
+   108                                          

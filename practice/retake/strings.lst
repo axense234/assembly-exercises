@@ -1,0 +1,65 @@
+     1                                  bits 32
+     2                                  
+     3                                  global start        
+     4                                  
+     5                                  extern exit, printf
+     6                                  import exit msvcrt.dll
+     7                                  import printf msvcrt.dll
+     8                                  
+     9                                  segment data use32 class=data
+    10 00000000 737472696E67203D20-         printf_format_s db "string = %s", 10, 0
+    10 00000009 25730A00           
+    11 0000000D 63686172203D202563-         printf_format_char db "char = %c", 10, 0
+    11 00000016 0A00               
+    12                                      
+    13 00000018 50616C696E64726F6D-         printf_format_palindrome db "Palindrome", 10, 0
+    13 00000021 650A00             
+    14 00000024 4E6F742050616C696E-         printf_format_not_palindrome db "Not Palindrome", 10, 0
+    14 0000002D 64726F6D650A00     
+    15                                      
+    16 00000034 7265766976657200            random_string db "reviver", 0
+    17                                  
+    18                                  segment code use32 class=code
+    19                                      start:
+    20 00000000 BE[34000000]                    mov esi, random_string
+    21 00000005 56                              push esi
+    22                                          
+    23 00000006 89F7                            mov edi, esi
+    24 00000008 B9FFFFFFFF                      mov ecx, -1
+    25 0000000D 30C0                            xor al, al
+    26 0000000F F2AE                            repne scasb
+    27                                          
+    28 00000011 4F                              dec edi ; null
+    29 00000012 4F                              dec edi ; last char
+    30                                          
+    31 00000013 5E                              pop esi ; first char
+    32                                          
+    33 00000014 FC                              cld
+    34                                          
+    35                                          search:
+    36 00000015 39FE                                cmp esi, edi
+    37 00000017 7408                                je palindrome
+    38                                          
+    39 00000019 AC                                  lodsb
+    40 0000001A 3A07                                cmp al, [edi]
+    41 0000001C 7519                                jne not_palindrome
+    42                                              
+    43 0000001E 4F                                  dec edi
+    44                                              
+    45 0000001F EBF4                                jmp search
+    46                                              
+    47                                          palindrome:
+    48 00000021 68[18000000]                    push dword printf_format_palindrome
+    49 00000026 FF15[00000000]                  call [printf]
+    50 0000002C 83C404                          add esp, 1 * 4
+    51                                          
+    52 0000002F 6A00                            push dword 0
+    53 00000031 FF15[00000000]                  call [exit]
+    54                                              
+    55                                          not_palindrome:
+    56 00000037 68[24000000]                    push dword printf_format_not_palindrome
+    57 0000003C FF15[00000000]                  call [printf]
+    58 00000042 83C404                          add esp, 1 * 4
+    59                                          
+    60 00000045 6A00                            push    dword 0      
+    61 00000047 FF15[00000000]                  call    [exit]
